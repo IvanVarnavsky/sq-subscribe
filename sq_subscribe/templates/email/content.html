@@ -1,0 +1,57 @@
+{# Шаблон для рассылки контента в HTML формате #}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body style="background:#ffffff">
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<table bgcolor="#ffffff" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+	<tr>
+		<td align="center">
+			<table width="100%" bgcolor="#e7e7e7" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+				<tr style="border-top:5px solid #e7e7e7;border-bottom:5px solid #e7e7e7">
+					<td width="20"><span style="line-height:0;"><img src="http://qimbo.ru/media/images/mail/blank.gif" width="20" height="20"/></span></td>
+					<td width="215"><span style="line-height:0;">
+						<a href="http://qimbo.ru" target="_blank"><img style="text-decoration:none;border:none;" src="http://qimbo.ru/media/images/mail/mail_logo.jpg" width="231" height="65" alt="qimbo"/></a>
+					</span></td>
+					<td width="20"><span style="line-height:0;"><img src="http://qimbo.ru/media/images/mail/blank.gif" width="20" height="20"/></span></td>
+					<td >
+						<span style="font-family:Arial,Verdana,sans-serif; font-size:12px; color:#404040;">
+								{# Редактируйте заголовок #}
+						</span>
+					</td>
+					<td width="20"><span style="line-height:0;"><img src="http://qimbo.ru/media/images/mail/blank.gif" width="20" height="20"/></span></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	{% for obj in message.objects %}
+		<tr>
+		<td align="center">
+			<table  bgcolor="#ffffff" cellpadding="0" cellspacing="0" style="border-collapse:separate;">
+			{# Добавьте сюда верстку предполагаемого контента #}
+			</table>
+		</td>
+		</tr>
+	{% endfor %}
+
+	{# --------------------------------------- Footer Content.------------------------------ #}
+	<tr>
+		<td align="center">
+			<table width="100%" bgcolor="#e7e7e7" cellpadding="0" cellspacing="0" style="border-collapse:separate;">
+				<tr>
+					<td height="2"><img src="http://qimbo.ru/media/images/mail/blank.gif" width="2" height="2"/></td>
+					<td>
+						<span style="font-family:Arial,Verdana,sans-serif; font-size:12px;color:#AE1312;">
+							<a  style="font-family:Arial,Verdana,sans-serif; font-size:12px;color:#AE1312;text-decoration:none;" href="http://qimbo.ru/subscribe/email/unsubscribe/{{ message.unsubscribe_link }}/" target="_blank">Отписаться</a>
+						</span>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	</table>
+</body>
+</html>
