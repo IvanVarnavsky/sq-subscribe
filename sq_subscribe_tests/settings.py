@@ -101,7 +101,7 @@ BROKER_VHOST = "celery"
 CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
 
 CELERY_SEND_TASK_ERROR_EMAILS = True
-CELERY_IMPORTS = ('sq_subscribe.subscribe.tasks', )
+#CELERY_IMPORTS = ('sq_subscribe.subscribe.tasks', )
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -113,11 +113,13 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'sq_core',
     'sq_core.basemodel',
+    'sq_widgets',
     'user',
     'djcelery',
     'sq_subscribe',
     'sq_subscribe.subscribe',
-    'sq_subscribe.sendmail',
+    'sq_subscribe.mailqueue',
+    'simplemodel',
 
 )
 
@@ -142,3 +144,4 @@ DEFAULT_FROM_EMAIL = 'SevenQuark.com <noreply@SevenQuark.com>'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_TEMPLATE_DIR = 'email'
 SEND_MAILQUEUE_DELAY = 60 * 2
+SUBSCRIBED_MODELS = ('simplemodel.SimpleModel',)

@@ -3,7 +3,7 @@ import json
 from celery.task import periodic_task, task
 from django.core import mail
 from sq_tasks.simpletask.decorators import simple_task
-from sq_subscribe.sendmail.models import MailQueue
+from sq_subscribe.mailqueue.models import MailQueue
 from django.conf import settings
 
 @simple_task(sleep = settings.SEND_MAILQUEUE_DELAY if settings.SEND_MAILQUEUE_DELAY else 60*2)

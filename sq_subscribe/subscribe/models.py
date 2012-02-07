@@ -2,7 +2,7 @@
 from django.db import models
 from djcelery.models import PeriodicTask
 from sq_core.basemodel.models import BaseModel
-from sq_subscribe.sendmail.models import CONTENT_TYPE
+from sq_subscribe.mailqueue.models import CONTENT_TYPE
 from django.db.models import get_model
 from django.conf import settings
 
@@ -33,9 +33,13 @@ class Subscribe(BaseModel):
     subject = models.CharField(u'Тема',max_length=1000,null=True,blank=True,default=u'Без темы')
     message = models.TextField(u'Сообщение',blank=True)
 
-
     def __unicode__(self):
         return self.subject
+
+    def delete(self, *args, **kwargs):
+        if self.task:
+            self.task.delete()
+        super(Subscribe, self).delete()
 
     class Meta:
         db_table = 'subscribe'
@@ -52,3 +56,19 @@ class UserSubscribes(models.Model):
 
     class Meta:
         db_table = 'user_subscribes'
+
+
+class ContentSubscribe(Subscribe):
+
+    class Meta:
+        proxy = True
+        verbose_name = 'Подписка на контент'
+        verbose_name_plural = 'Подписки на контент'
+
+
+class SometimeSubscribe(Subscribe):
+
+    class Meta:
+        proxy = True
+        verbose_name = 'Одноразовая подписка'
+        verbose_name_plural = 'Одноразовые подписки'
