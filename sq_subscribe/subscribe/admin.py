@@ -4,6 +4,8 @@ from django import forms
 from django.conf import settings
 from django.contrib import admin
 from django.db.models.loading import get_model
+from django.template.base import TemplateDoesNotExist
+from django.template.loaders.eggs import  Loader
 from djcelery.admin import LaxChoiceField
 from djcelery.models import PeriodicTask, CrontabSchedule
 from sq_subscribe.subscribe.models import SometimeSubscribe, ContentSubscribe
@@ -13,7 +15,8 @@ from sq_widgets.widgets import HighlighterWidget
 def load_models():
     data = {'':'Выберите модель'}
     dictList = []
-    if settings.SUBSCRIBED_MODELS is not None:
+    models =  getattr(settings, "SUBSCRIBED_MODELS", False)
+    if models:
         for subscribed in settings.SUBSCRIBED_MODELS:
             #TODO нужно обработать вложенность больше одной в apps
             try:
@@ -31,14 +34,55 @@ def load_models():
             dictList.append(temp)
     return dictList
 
+def load_template(content = 'plain', type = 'content'):
+    template_dir =  getattr(settings, "ADMIN_SUBSCRIBE_DIR", False)
+    template_path = None
+    if not template_dir:
+        template_dir = "email/"
+        if content == 'plain':
+            template_path = template_dir+'{0}.{1}'.format(type,'txt')
+        else:
+            template_path = template_dir+'{0}.{1}'.format(type,'html')
+        print template_path
+    try:
+        template = Loader().load_template_source(template_path)[0]
+    except TemplateDoesNotExist:
+        raise TemplateDoesNotExist('Template path %s does not exist.'%template_path)
+    return template
+
 class ContentSubscribeForm(forms.ModelForm):
-    modelname = LaxChoiceField(label=u"Подписать на контент", choices=load_models(),)
+    modelname = LaxChoiceField(label=u"Подписать на контент", choices=load_models())
     subscribe_type = forms.CharField(label='',widget=forms.HiddenInput,initial='content')
-    message = forms.CharField(widget=HighlighterWidget)
+    message = forms.CharField(label=u'Сообщение',widget=HighlighterWidget,initial=load_template())
+    hidden_message = forms.CharField(widget=forms.Textarea,required=False,initial=load_template(content='html'))
 
     def __init__(self, *args, **kwargs):
          super(ContentSubscribeForm, self).__init__(*args, **kwargs)
          self.fields['weekday'].required = True
+#         self.fields['hidden_message'].widget.attrs['disabled'] = True
+         instance = getattr(self, 'instance', None)
+         hidden_message_template = 'html'
+         if instance and instance.id:
+            self.fields['modelname'].widget.attrs['disabled'] = True
+            self.fields['modelname'].required = False
+            if instance.content_type == 'html':
+                hidden_message_template = 'plain'
+         self.fields['hidden_message'].initial = load_template(hidden_message_template)
+
+    def clean_modelname(self):
+        if self.instance and self.instance.id:
+            return self.instance.modelname
+        else :
+            return self.cleaned_data['modelname']
+
+#    def clean_hidden_message(self):
+#        if self.instance and self.instance.id:
+#            if self.cleaned_data['content_type'] == 'plain':
+#                return load_template(content='html')
+#            else:
+#                return load_template()
+#        else :
+#            return load_template()
 
 
     def save(self, commit=True):
@@ -64,7 +108,7 @@ class ContentSubscribeForm(forms.ModelForm):
         else:
             task.enabled = False
         subscribe.save()
-        task.name = u'Очередь подписки %s'%subscribe
+        task.name = u'Очередь подписки ({0}) {1}'.format(subscribe.id,subscribe)
         task.save()
         subscribe.task = task
         subscribe.save()
@@ -84,7 +128,7 @@ class ContentSubscribeForm(forms.ModelForm):
 
 class SometimeSubscribeForm(forms.ModelForm):
     subscribe_type = forms.CharField(label='',widget=forms.HiddenInput,initial='sometime',)
-    message = forms.CharField(widget=HighlighterWidget)
+    message = forms.CharField(label=u'Сообщение',widget=HighlighterWidget)
 
     def save(self, commit=True):
         subscribe = super(SometimeSubscribeForm, self).save(commit=False)
@@ -118,7 +162,7 @@ class ContentSubscribeAdmin(admin.ModelAdmin):
             'fields': ('content_type','subject','message','published',)
         }),
         (None, {
-            'fields': ('subscribe_type',),
+            'fields': ('hidden_message','subscribe_type',),
             'classes': ('hidden_fieldset',),
         }),
     )
