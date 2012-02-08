@@ -145,3 +145,4 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_TEMPLATE_DIR = 'email'
 SEND_MAILQUEUE_DELAY = 60 * 2
 SUBSCRIBED_MODELS = ('simplemodel.SimpleModel',)
+ADMIN_SUBSCRIBE_TEMPLATE_DIR = EMAIL_TEMPLATE_DIR + "/admin"

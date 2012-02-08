@@ -35,14 +35,14 @@ def load_models():
     return dictList
 
 def load_template(content = 'plain', type = 'content'):
-    template_dir =  getattr(settings, "ADMIN_SUBSCRIBE_DIR", False)
+    template_dir =  getattr(settings, "ADMIN_SUBSCRIBE_TEMPLATE_DIR", False)
     template_path = None
     if not template_dir:
-        template_dir = "email/"
+        template_dir = "email"
         if content == 'plain':
-            template_path = template_dir+'{0}.{1}'.format(type,'txt')
+            template_path = template_dir+'/{0}.{1}'.format(type,'txt')
         else:
-            template_path = template_dir+'{0}.{1}'.format(type,'html')
+            template_path = template_dir+'/{0}.{1}'.format(type,'html')
         print template_path
     try:
         template = Loader().load_template_source(template_path)[0]
@@ -59,7 +59,6 @@ class ContentSubscribeForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
          super(ContentSubscribeForm, self).__init__(*args, **kwargs)
          self.fields['weekday'].required = True
-#         self.fields['hidden_message'].widget.attrs['disabled'] = True
          instance = getattr(self, 'instance', None)
          hidden_message_template = 'html'
          if instance and instance.id:
@@ -74,15 +73,6 @@ class ContentSubscribeForm(forms.ModelForm):
             return self.instance.modelname
         else :
             return self.cleaned_data['modelname']
-
-#    def clean_hidden_message(self):
-#        if self.instance and self.instance.id:
-#            if self.cleaned_data['content_type'] == 'plain':
-#                return load_template(content='html')
-#            else:
-#                return load_template()
-#        else :
-#            return load_template()
 
 
     def save(self, commit=True):
@@ -128,7 +118,7 @@ class ContentSubscribeForm(forms.ModelForm):
 
 class SometimeSubscribeForm(forms.ModelForm):
     subscribe_type = forms.CharField(label='',widget=forms.HiddenInput,initial='sometime',)
-    message = forms.CharField(label=u'Сообщение',widget=HighlighterWidget)
+    message = forms.CharField(label=u'Сообщение',widget=forms.Textarea)
 
     def save(self, commit=True):
         subscribe = super(SometimeSubscribeForm, self).save(commit=False)

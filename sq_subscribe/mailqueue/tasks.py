@@ -32,7 +32,7 @@ def send_email_message(subject,template,send_to,content_type,message=None,send_f
     from django.conf import settings
     if send_from is None:
         send_from = settings.DEFAULT_FROM_EMAIL
-    msg = {"message":message}
+    msg = {"data":message}
     email = MailQueue.objects.create(message=json.dumps(msg),send_to=send_to,subject=subject,template=template,send_from=send_from,content_type=content_type)
     email.save()
     connection = None
