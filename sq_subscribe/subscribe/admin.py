@@ -3,13 +3,14 @@ from string import strip
 from django import forms
 from django.conf import settings
 from django.contrib import admin
+from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.db.models.loading import get_model
 from django.template.base import TemplateDoesNotExist
 from django.template.loaders.eggs import  Loader
 from djcelery.admin import LaxChoiceField
 from djcelery.models import PeriodicTask, CrontabSchedule
 from sq_subscribe.subscribe.models import SometimeSubscribe, ContentSubscribe
-from sq_widgets.widgets import HighlighterWidget
+from sq_widgets.widgets import HighlighterWidget, WysiwygWidget
 
 
 def load_models():
@@ -36,14 +37,12 @@ def load_models():
 
 def load_template(content = 'plain', type = 'content'):
     template_dir =  getattr(settings, "ADMIN_SUBSCRIBE_TEMPLATE_DIR", False)
-    template_path = None
     if not template_dir:
         template_dir = "email"
-        if content == 'plain':
-            template_path = template_dir+'/{0}.{1}'.format(type,'txt')
-        else:
-            template_path = template_dir+'/{0}.{1}'.format(type,'html')
-        print template_path
+    if content == 'plain':
+        template_path = template_dir+'/{0}.{1}'.format(type,'txt')
+    else:
+        template_path = template_dir+'/{0}.{1}'.format(type,'html')
     try:
         template = Loader().load_template_source(template_path)[0]
     except TemplateDoesNotExist:
@@ -118,7 +117,8 @@ class ContentSubscribeForm(forms.ModelForm):
 
 class SometimeSubscribeForm(forms.ModelForm):
     subscribe_type = forms.CharField(label='',widget=forms.HiddenInput,initial='sometime',)
-    message = forms.CharField(label=u'Сообщение',widget=forms.Textarea)
+    message = forms.CharField(label=u'Сообщение',widget=WysiwygWidget)
+    select_users = forms.ModelMultipleChoiceField(label=u'Получатели',queryset=get_model(*settings.CUSTOM_USER_MODEL.split('.')).objects.all(), widget=FilteredSelectMultiple(u"Пользователи", is_stacked=False))
 
     def save(self, commit=True):
         subscribe = super(SometimeSubscribeForm, self).save(commit=False)
@@ -131,7 +131,7 @@ class SometimeSubscribeForm(forms.ModelForm):
     class Media:
         js = (
             'sq_subscribe/js/jquery-1.6.1.js',
-            'sq_subscribe/js/subscribe-0.1.js',
+#            'sq_subscribe/js/subscribe-0.1.js',
         )
         css = {
             'all': ( 'sq_subscribe/css/style.css',)
@@ -169,7 +169,7 @@ class SometimeSubscribeAdmin(admin.ModelAdmin):
             'fields': ('delete_after_sending',)
         }),
         (None, {
-            'fields': ('content_type','subject','message','published',)
+            'fields': ('content_type','subject','message','select_users','published',)
         }),
         (None, {
             'fields': ('subscribe_type',),
