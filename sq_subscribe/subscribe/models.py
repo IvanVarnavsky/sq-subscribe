@@ -41,6 +41,12 @@ class Subscribe(BaseModel):
             self.task.delete()
         super(Subscribe, self).delete()
 
+    def get_modelname(self):
+        if ":" in self.modelname:
+            model_app = self.modelname.split(":")
+            return get_model(model_app[0],model_app[1])
+        return get_model("",self.modelname)
+
     class Meta:
         db_table = 'subscribe'
         verbose_name = 'Подписка'
@@ -56,6 +62,7 @@ class UserSubscribes(models.Model):
 
     class Meta:
         db_table = 'user_subscribes'
+        unique_together = (("user", "subscribe"),)
 
 
 class ContentSubscribe(Subscribe):

@@ -1,7 +1,10 @@
+import json
 from celery.task import task
+from django.conf import settings
+from django.contrib.sites.models import Site
+from django.core import serializers
 from sq_subscribe.mailqueue.models import create_mailqueue
 from sq_subscribe.subscribe.models import Subscribe, UserSubscribes
-
 
 @task
 def build_subsribe_query(subscribe_id=None):
@@ -9,11 +12,18 @@ def build_subsribe_query(subscribe_id=None):
         subscribe = Subscribe.objects.get(id = subscribe_id)
     except Exception:
         raise Exception('Subscribe not found')
-    # TODO сделать из переменных сообщения актуальные данные (если подписка на контент)
     usersubscribes = UserSubscribes.objects.filter(subscribe = subscribe)
-    for usersub in usersubscribes:
-        # TODO добавить в сообщение userdata
-        create_mailqueue(subject=subscribe.subject,template=subscribe.template,send_to=usersub.user.email,
-                         content_type=subscribe.content_type,message=subscribe.message)
-
-
+    if usersubscribes.count() > 0:
+        message = {'sitename': Site.objects.get(id=settings.SITE_ID).name}
+        objects = subscribe.get_modelname().objects.all()
+        data_objects = serializers.serialize("json", objects)
+        message.update({'objects':json.loads(data_objects)})
+        mail_ids = []
+        for usersub in usersubscribes:
+            data_user = {'unsubscribe':usersub.unsubscribe_link,'username':usersub.user.username}
+            vars = message
+            vars.update({'user':data_user})
+            mail = create_mailqueue(subject=subscribe.subject,template=subscribe.message,send_to=usersub.user.email,
+                             content_type=subscribe.content_type,message=vars)
+            mail_ids.append(mail.id)
+#        send_concrete_mailqueue(mail_ids)

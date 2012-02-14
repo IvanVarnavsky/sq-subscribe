@@ -9,7 +9,7 @@ from django.template.base import TemplateDoesNotExist
 from django.template.loaders.eggs import  Loader
 from djcelery.admin import LaxChoiceField
 from djcelery.models import PeriodicTask, CrontabSchedule
-from sq_subscribe.subscribe.models import SometimeSubscribe, ContentSubscribe
+from sq_subscribe.subscribe.models import SometimeSubscribe, ContentSubscribe, UserSubscribes
 from sq_widgets.widgets import HighlighterWidget, WysiwygWidget
 
 
@@ -24,17 +24,20 @@ def load_models():
                 if "." in subscribed:
                     app_model = subscribed.split('.')
                     model = get_model(app_model[0],app_model[1])
+                    model_name = "{0}:{1}".format(app_model[0],app_model[1])
                 else:
                     model = get_model("",subscribed)
+                    model_name = subscribed
             except Exception:
                 raise Exception('Error loading subscribed model with name: %s'%subscribed)
-            data.update({model:model._meta.verbose_name})
+            data.update({model_name:model._meta.verbose_name})
         temp = []
         for key, value in data.iteritems():
             temp = [key,value]
             dictList.append(temp)
     return dictList
 
+ #TODO FIXME
 def load_template(content = 'plain', type = 'content'):
     template_dir =  getattr(settings, "ADMIN_SUBSCRIBE_TEMPLATE_DIR", False)
     if not template_dir:
@@ -101,6 +104,14 @@ class ContentSubscribeForm(forms.ModelForm):
         task.save()
         subscribe.task = task
         subscribe.save()
+        # ------------ TEST ------------ #
+        user = get_model(*settings.CUSTOM_USER_MODEL.split('.')).objects.get(username = 'admin')
+
+        import hashlib
+        key_string = user.username
+        salt = str(user.date_joined)
+        link = hashlib.md5( salt + key_string ).hexdigest()
+        userSuscribe = UserSubscribes.objects.get_or_create(user = user ,subscribe = subscribe, unsubscribe_link = link)
         return subscribe
 
     class Meta:

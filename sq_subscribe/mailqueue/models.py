@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
-from django.template.base import TemplateDoesNotExist
+from django.template.base import TemplateDoesNotExist, Template, TemplateSyntaxError
+from django.template.context import Context
 from django.utils import simplejson as json
 
 from django.core.mail.message import EmailMultiAlternatives, EmailMessage
 from django.db import models
-from django.template.loader import render_to_string
+from django.template.loader import render_to_string, get_template_from_string
 from django.utils.html import strip_tags
 
 CONTENT_TYPE = [
@@ -34,13 +35,20 @@ class MailQueue(models.Model):
     def send_email(self,connecion):
         vars = json.loads(self.message)
         from django.conf import settings
-        template_directory = settings.EMAIL_TEMPLATE_DIR  if settings.EMAIL_TEMPLATE_DIR else 'email'
-        #TODO сделать логику выбора рендера шаблона из файла или из базы
-        try:
-            html_content = render_to_string(template_directory+'/%s'%self.template,vars)
-        except TemplateDoesNotExist:
-            raise TemplateDoesNotExist('Template dir %s does not exist.'%template_directory)
-        text_content = strip_tags(html_content)
+        template_directory =  getattr(settings, "EMAIL_TEMPLATE_DIR", 'email')
+        if self.template.endswith('.html') or self.template.endswith('.txt'):
+            try:
+                html_content = render_to_string(template_directory+'/%s'%self.template,vars)
+            except TemplateDoesNotExist:
+                raise TemplateDoesNotExist('Template dir %s does not exist.'%template_directory)
+            text_content = strip_tags(html_content)
+        else:
+            try:
+                t = get_template_from_string(self.template)
+                html_content = t.render(Context(vars))
+            except TemplateSyntaxError:
+                raise TemplateSyntaxError('Template syntax error.')
+            text_content = strip_tags(html_content)
         try:
             if self.content_type == 'html':
                 msg = EmailMultiAlternatives(self.subject,text_content,from_email=self.send_from,to=[self.send_to],connection=connecion)
@@ -49,6 +57,7 @@ class MailQueue(models.Model):
                 msg = EmailMessage(self.subject,text_content,from_email=self.send_from,to=[self.send_to],connection=connecion)
         except Exception:
             raise Exception('Email message %s can not created.'%self.id)
+        self.delete()
         return msg
 
 def create_mailqueue(subject,template,send_to,content_type,message=None,send_from=None):
@@ -58,3 +67,4 @@ def create_mailqueue(subject,template,send_to,content_type,message=None,send_fro
     msg = {"data":message}
     mail = MailQueue.objects.create(message=json.dumps(msg),send_to=send_to,subject=subject,template=template,send_from=send_from,content_type=content_type)
     mail.save()
+    return mail

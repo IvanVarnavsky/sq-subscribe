@@ -7,7 +7,7 @@ class SimpleModel(BaseModel):
     text = models.TextField()
 
     def __unicode__(self):
-        return u'Simple Model ' + str(self.title)
+        return u'Simple Model ' + self.title
 
     class Meta:
         verbose_name = 'Простая модель'
