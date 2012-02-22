@@ -10,8 +10,8 @@ from django.template.loader import render_to_string, get_template_from_string
 from django.utils.html import strip_tags
 
 CONTENT_TYPE = [
-    ('html', u'В формате HTML'),
     ('plain', u'В текстовом формате'),
+    ('html', u'В формате HTML'),
 ]
 
 class MailQueue(models.Model):

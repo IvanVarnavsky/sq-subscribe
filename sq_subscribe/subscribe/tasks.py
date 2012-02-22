@@ -1,18 +1,21 @@
+from datetime import datetime
 import json
 from celery.task import task
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core import serializers
 from sq_subscribe.mailqueue.models import create_mailqueue
+from sq_subscribe.mailqueue.tasks import send_concrete_mailqueue
 from sq_subscribe.subscribe.models import Subscribe, UserSubscribes
 
 @task
-def build_subsribe_query(subscribe_id=None):
+def build_subsribe_query(subscribe_id):
     try:
-        subscribe = Subscribe.objects.get(id = subscribe_id)
+        subscribe = Subscribe.objects.get(pk = subscribe_id)
     except Exception:
         raise Exception('Subscribe not found')
     usersubscribes = UserSubscribes.objects.filter(subscribe = subscribe)
+    subscribe.last_send_date = datetime.now()
     if usersubscribes.count() > 0:
         message = {'sitename': Site.objects.get(id=settings.SITE_ID).name}
         objects = subscribe.get_modelname().objects.all()
@@ -26,4 +29,4 @@ def build_subsribe_query(subscribe_id=None):
             mail = create_mailqueue(subject=subscribe.subject,template=subscribe.message,send_to=usersub.user.email,
                              content_type=subscribe.content_type,message=vars)
             mail_ids.append(mail.id)
-#        send_concrete_mailqueue(mail_ids)
+        send_concrete_mailqueue.delay(mail_ids)
