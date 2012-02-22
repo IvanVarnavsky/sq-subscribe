@@ -1,2 +1,3 @@
 recursive-include sq_subscribe/static *
 recursive-include sq_subscribe/templates *
+recursive-include sq_subscribe_tests/templates *

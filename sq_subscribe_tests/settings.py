@@ -10,7 +10,7 @@ ADMINS = ()
 MANAGERS = ADMINS
 
 
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 
 DATABASES = {
     'default': {
@@ -76,10 +76,8 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
-    os.path.join(PROJECT_ROOT, 'templates')
+    os.path.join(PROJECT_ROOT, 'templates'),
 )
-
-
 
 djcelery.setup_loader()
 
@@ -145,4 +143,4 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_TEMPLATE_DIR = 'email'
 SEND_MAILQUEUE_DELAY = 30
 SUBSCRIBED_MODELS = ('simplemodel.SimpleModel',)
-#ADMIN_SUBSCRIBE_TEMPLATE_DIR = EMAIL_TEMPLATE_DIR.join('/admin')
+#ADMIN_SUBSCRIBE_TEMPLATE_DIR = EMAIL_TEMPLATE_DIR + '/admin'

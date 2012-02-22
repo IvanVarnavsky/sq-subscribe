@@ -3,7 +3,9 @@ from string import strip
 from django.contrib.sites.models import Site
 from django.db import models
 from django.template.base import TemplateDoesNotExist
-from django.template.loaders.eggs import Loader
+from django.template.loader import get_template, find_template, find_template_loader
+from django.template.loaders.filesystem import Loader
+
 from djcelery.models import PeriodicTask, CrontabSchedule
 from sq_core.basemodel.models import BaseModel
 from sq_core.baseuser.models import get_user_model
@@ -120,27 +122,33 @@ class Subscribe(BaseModel):
         verbose_name_plural = 'Подписки'
 
 
-
- #TODO FIXME
 def load_template(content = 'plain', type = 'content'):
-    template_dir =  getattr(settings, "ADMIN_SUBSCRIBE_TEMPLATE_DIR", False)
-    template = ""
-    if not template_dir:
-        template_dir = "email"
-        if type == 'content':
-            if content == 'plain':
-                template_path = template_dir+'/{0}.{1}'.format(type,'txt')
-            else:
-                template_path = template_dir+'/{0}.{1}'.format(type,'html')
-            try:
-                template = Loader().load_template_source(template_path)[0]
-            except TemplateDoesNotExist:
-                raise TemplateDoesNotExist('Template path %s does not exist.'%template_path)
+    template_dir =  getattr(settings, "ADMIN_SUBSCRIBE_TEMPLATE_DIR", "email")
+    template = None
+    if type == 'content':
+        if content == 'plain':
+            template_name = '{0}.{1}'.format(type,'txt')
         else:
-            if content == 'plain':
-                template = '{0}.{1}'.format(type,'txt')
-            else:
-                template = '{0}.{1}'.format(type,'html')
+            template_name = '{0}.{1}'.format(type,'html')
+        template_path = template_dir + "/" + template_name
+
+        loaders = []
+        for loader_name in settings.TEMPLATE_LOADERS:
+            loader = find_template_loader(loader_name)
+            if loader is not None:
+                loaders.append(loader)
+        template_source_loaders = tuple(loaders)
+        for loader in template_source_loaders:
+            try:
+                template = loader.load_template_source(template_path)
+                return template[0]
+            except TemplateDoesNotExist:
+                pass
+    else:
+        if content == 'plain':
+            template = '{0}.{1}'.format(type,'txt')
+        else:
+            template = '{0}.{1}'.format(type,'html')
     return template
 
 
