@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import os
-import djcelery
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -57,6 +56,7 @@ SECRET_KEY = 's+m51jp(bx380!u#0f8owd-(n6_))%-332r1xg6z14)@_w+7c3'
 AUTHENTICATION_BACKENDS = (
     'sq_core.baseuser.backends.CustomUserModelBackend',
 )
+
 CUSTOM_USER_MODEL = 'user.User'
 
 
@@ -79,27 +79,6 @@ TEMPLATE_DIRS = (
     os.path.join(PROJECT_ROOT, 'templates'),
 )
 
-djcelery.setup_loader()
-
-CELERY_RESULT_BACKEND = "mongodb"
-CELERY_MONGODB_BACKEND_SETTINGS = {
-    "host": "127.0.0.1",
-    "port": 27017,
-    "database": "subscribe_celery",
-    "taskmeta_collection": "subscribes_meta"
-}
-
-BROKER_BACKEND = "mongodb"
-BROKER_HOST = "localhost"
-BROKER_PORT = 27017
-BROKER_USER = ""
-BROKER_PASSWORD = ""
-BROKER_VHOST = "celery"
-
-CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
-
-CELERY_SEND_TASK_ERROR_EMAILS = True
-#CELERY_IMPORTS = ('sq_subscribe.subscribe.tasks', 'sq_subscribe.mailqueue.tasks',)
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -109,16 +88,10 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
-    'sq_core',
-    'sq_core.basemodel',
-    'sq_widgets',
     'user',
-    'djcelery',
-    'sq_subscribe',
-    'sq_subscribe.subscribe',
-    'sq_subscribe.mailqueue',
     'simplemodel',
-
+    'sq_subscribe',
+    'sq_admin'
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -131,16 +104,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 )
 
-
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'kexbit@gmail.com'
-EMAIL_HOST_PASSWORD = 'dav200588'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-SERVER_EMAIL = EMAIL_HOST_USER
-DEFAULT_FROM_EMAIL = 'SevenQuark.com <noreply@SevenQuark.com>'
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_TEMPLATE_DIR = 'email'
-SEND_MAILQUEUE_DELAY = 30
 SUBSCRIBED_MODELS = ('simplemodel.SimpleModel',)
-#ADMIN_SUBSCRIBE_TEMPLATE_DIR = EMAIL_TEMPLATE_DIR + '/admin'
+
+
+

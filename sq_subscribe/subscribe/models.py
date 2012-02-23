@@ -3,8 +3,7 @@ from string import strip
 from django.contrib.sites.models import Site
 from django.db import models
 from django.template.base import TemplateDoesNotExist
-from django.template.loader import get_template, find_template, find_template_loader
-from django.template.loaders.filesystem import Loader
+from django.template.loader import find_template_loader
 
 from djcelery.models import PeriodicTask, CrontabSchedule
 from sq_core.basemodel.models import BaseModel
