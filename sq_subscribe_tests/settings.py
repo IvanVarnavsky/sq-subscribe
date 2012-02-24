@@ -106,5 +106,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 SUBSCRIBED_MODELS = ('simplemodel.SimpleModel',)
 
+#ADMIN_SUBSCRIBE_TEMPLATE_DIR = 'email/admin'
 
 
