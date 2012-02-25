@@ -9,6 +9,7 @@ from django.db import models
 from django.template.loader import render_to_string, get_template_from_string
 from django.utils.html import strip_tags
 
+
 CONTENT_TYPE = [
     ('plain', u'В текстовом формате'),
     ('html', u'В формате HTML'),
@@ -68,3 +69,11 @@ def create_mailqueue(subject,template,send_to,content_type,message=None,send_fro
     mail = MailQueue.objects.create(message=json.dumps(msg),send_to=send_to,subject=subject,template=template,send_from=send_from,content_type=content_type)
     mail.save()
     return mail
+
+
+def send_email(subject,template,send_to,content_type,message=None,send_from=None):
+    from sq_subscribe.mailqueue.tasks import send_concrete_mailqueue
+    mail = create_mailqueue(subject,template,send_to,content_type,message,send_from)
+    #TODO нужно придумать, как сделать проверку - отправлять ли письмо по таску или мгновенно.
+    send_concrete_mailqueue.delay([mail.id])
+
