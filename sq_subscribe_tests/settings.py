@@ -88,11 +88,13 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    'sq_admin',
+    'sq_subscribe',
+    'sq_subscribe.subscribe',#TODO Без этой поебени сельдерей не видит тасков, хз почему
     'user',
     'simplemodel',
-    'sq_subscribe',
-    'sq_admin'
 )
+
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.auth',
@@ -107,5 +109,12 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 SUBSCRIBED_MODELS = ('simplemodel.SimpleModel',)
 
 #ADMIN_SUBSCRIBE_TEMPLATE_DIR = 'email/admin'
-
-
+#TODO настройки модулей джанги не засунуть в модуль по дефолту, т.к некоторые ее модули инициализируются до начала импорта настроек
+EMAIL_HOST =  'smtp.gmail.com'
+EMAIL_HOST_USER =  'kexbit@gmail.com'
+EMAIL_HOST_PASSWORD = 'dav200588'
+EMAIL_PORT =  587
+EMAIL_USE_TLS = True
+SERVER_EMAIL =  EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL =  'SevenQuark.com <noreply@SevenQuark.com>'
+EMAIL_BACKEND =  'django.core.mail.backends.smtp.EmailBackend'

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from string import strip
 from django import forms
 from django.conf import settings
 from django.contrib import admin

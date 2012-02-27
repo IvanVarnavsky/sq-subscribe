@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
-from django.template.base import TemplateDoesNotExist, Template, TemplateSyntaxError
+from django.contrib.sites.models import Site
+from django.template.base import TemplateDoesNotExist, TemplateSyntaxError
 from django.template.context import Context
 from django.utils import simplejson as json
 
@@ -61,10 +62,13 @@ class MailQueue(models.Model):
         self.delete()
         return msg
 
-def create_mailqueue(subject,template,send_to,content_type,message=None,send_from=None):
+def create_mailqueue(subject, template, send_to, content_type, message=None, send_from=None):
+    if not message: message = {}
     from django.conf import settings
     if send_from is None:
         send_from = settings.DEFAULT_FROM_EMAIL
+    site = Site.objects.get_current()
+    message.update({"site":{'sitename': site.name,'domain':site.domain}})
     msg = {"data":message}
     mail = MailQueue.objects.create(message=json.dumps(msg),send_to=send_to,subject=subject,template=template,send_from=send_from,content_type=content_type)
     mail.save()
@@ -76,4 +80,3 @@ def send_email(subject,template,send_to,content_type,message=None,send_from=None
     mail = create_mailqueue(subject,template,send_to,content_type,message,send_from)
     #TODO нужно придумать, как сделать проверку - отправлять ли письмо по таску или мгновенно.
     send_concrete_mailqueue.delay([mail.id])
-

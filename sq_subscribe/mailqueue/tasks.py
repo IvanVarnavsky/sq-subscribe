@@ -1,7 +1,7 @@
-import json
 from celery.task import task
+from django.conf import settings
 from django.core import mail
-from sq_subscribe.mailqueue.models import MailQueue
+from sq_subscribe.mailqueue.models import MailQueue, create_mailqueue
 
 
 @task(name='send_concrete_mailqueue',ignore_result=True)
@@ -25,12 +25,7 @@ def send_concrete_mailqueue(queue_ids):
 #Асинхронная отправка сообщения, подойдет для уведомлений.
 @task(name='send_email_message')
 def send_email_message(subject,template,send_to,content_type,message=None,send_from=None):
-    from django.conf import settings
-    if send_from is None:
-        send_from = settings.DEFAULT_FROM_EMAIL
-    msg = {"data":message}
-    email = MailQueue.objects.create(message=json.dumps(msg),send_to=send_to,subject=subject,template=template,send_from=send_from,content_type=content_type)
-    email.save()
+    email = create_mailqueue(subject,template,send_to,content_type,message,)
     connection = None
     try:
         connection = mail.get_connection(fail_silently=True)

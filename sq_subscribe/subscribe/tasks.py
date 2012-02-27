@@ -1,8 +1,6 @@
 from datetime import datetime
 import json
 from celery.task import task
-from django.conf import settings
-from django.contrib.sites.models import Site
 from django.core import serializers
 from sq_subscribe.mailqueue.models import create_mailqueue
 from sq_subscribe.mailqueue.tasks import send_concrete_mailqueue
@@ -17,10 +15,9 @@ def build_subsribe_query(subscribe_id):
     usersubscribes = UserSubscribes.objects.filter(subscribe = subscribe)
     subscribe.last_send_date = datetime.now()
     if usersubscribes.count() > 0:
-        message = {'sitename': Site.objects.get(id=settings.SITE_ID).name}
         objects = subscribe.get_modelname().objects.all()
         data_objects = serializers.serialize("json", objects)
-        message.update({'objects':json.loads(data_objects)})
+        message = {'objects':json.loads(data_objects)}
         mail_ids = []
         for usersub in usersubscribes:
             data_user = {'unsubscribe':usersub.unsubscribe_link,'username':usersub.user.username}

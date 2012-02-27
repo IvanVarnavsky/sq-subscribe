@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from string import strip
-from django.contrib.sites.models import Site
 from django.db import models
 from django.template.base import TemplateDoesNotExist
 from django.template.loader import find_template_loader
@@ -78,7 +77,7 @@ class Subscribe(BaseModel):
         else:
             task.enabled = False
         self.save()
-        task.name = u'Очередь подписки ({0}) {1}'.format(self.id,subscribe)
+        task.name = u'Очередь подписки ({0}) {1}'.format(self.subject,self.id)
         task.save()
         self.task = task
         self.save()
@@ -91,7 +90,7 @@ class Subscribe(BaseModel):
         self.template = template
         self.save()
         if users is not None:
-            message = {'sitename': Site.objects.get(id=settings.SITE_ID).name,'message':self.message}
+            message = {'message':self.message}
             mail_ids = []
             for user in users:
                 data_user = {'username':user.username}
