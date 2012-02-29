@@ -5,7 +5,7 @@ from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.db.models.loading import get_model
 from djcelery.admin import LaxChoiceField
-from sq_core.baseuser.models import get_user_model
+from sq_user.baseuser.models import get_user_model
 from sq_subscribe.subscribe.models import SometimeSubscribe, ContentSubscribe, UserSubscribes, load_template
 from sq_widgets.widgets import HighlighterWidget, WysiwygWidget
 from sq_subscribe.mailqueue.models import CONTENT_TYPE

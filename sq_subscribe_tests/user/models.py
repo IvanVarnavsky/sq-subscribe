@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from sq_core.baseuser.models import BaseUser
+from sq_user.baseuser.models import BaseUser
 
 
 class User(BaseUser):

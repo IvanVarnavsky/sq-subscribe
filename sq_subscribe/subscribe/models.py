@@ -6,7 +6,7 @@ from django.template.loader import find_template_loader
 
 from djcelery.models import PeriodicTask, CrontabSchedule
 from sq_core.basemodel.models import BaseModel
-from sq_core.baseuser.models import get_user_model
+from sq_user.baseuser.models import get_user_model
 from sq_subscribe.mailqueue.models import CONTENT_TYPE, create_mailqueue
 from django.db.models import get_model
 from django.conf import settings

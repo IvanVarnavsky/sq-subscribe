@@ -4,7 +4,7 @@ def inject_module_apps():
     from django.conf import settings
     APPS = [
         'sq_core',
-        'sq_core.basemodel',
+        'sq_user',
         'sq_widgets',
         'sq_tasks',
         'sq_subscribe.subscribe',

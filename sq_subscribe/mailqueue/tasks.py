@@ -1,5 +1,4 @@
 from celery.task import task
-from django.conf import settings
 from django.core import mail
 from sq_subscribe.mailqueue.models import MailQueue, create_mailqueue
 

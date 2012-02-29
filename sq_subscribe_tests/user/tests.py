@@ -1,5 +1,5 @@
 from unittest.case import TestCase
-from sq_core.baseuser.backends import CustomUserModelBackend
+from sq_user.baseuser.backends import CustomUserModelBackend
 
 class SimpleTaskTest(TestCase):
 
