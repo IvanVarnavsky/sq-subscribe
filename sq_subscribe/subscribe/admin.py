@@ -95,7 +95,7 @@ class SometimeSubscribeForm(forms.ModelForm):
             'js/subscribe-0.1.js',
         )
         css = {
-            'all': ( 'sq_subscribe/css/style.css',)
+            'all': ( 'css/style.css',)
         }
 
 
