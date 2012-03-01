@@ -163,12 +163,14 @@ class UserSubscribes(models.Model):
         unique_together = (("user", "subscribe"),)
 
 
+
 class ContentSubscribe(Subscribe):
 
     class Meta:
         proxy = True
         verbose_name = 'Подписка на контент'
         verbose_name_plural = 'Подписки на контент'
+        admin_app_label = 'Подписки'
 
 
 class SometimeSubscribe(Subscribe):
@@ -177,3 +179,4 @@ class SometimeSubscribe(Subscribe):
         proxy = True
         verbose_name = 'Одноразовая подписка'
         verbose_name_plural = 'Одноразовые подписки'
+        admin_app_label = 'Подписки'
