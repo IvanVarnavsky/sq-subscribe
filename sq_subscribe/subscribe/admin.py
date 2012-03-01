@@ -68,11 +68,11 @@ class ContentSubscribeForm(forms.ModelForm):
 
     class Media:
         js = (
-            'sq_subscribe/js/jquery-1.6.1.js',
-            'sq_subscribe/js/subscribe-0.1.js',
+            'js/jquery-1.6.1.js',
+            'js/subscribe-0.1.js',
         )
         css = {
-            'all': ( 'sq_subscribe/css/style.css',)
+            'all': ( 'css/style.css',)
         }
 
 class SometimeSubscribeForm(forms.ModelForm):
@@ -91,8 +91,8 @@ class SometimeSubscribeForm(forms.ModelForm):
 
     class Media:
         js = (
-            'sq_subscribe/js/jquery-1.6.1.js',
-            'sq_subscribe/js/subscribe-0.1.js',
+            'js/jquery-1.6.1.js',
+            'js/subscribe-0.1.js',
         )
         css = {
             'all': ( 'sq_subscribe/css/style.css',)
