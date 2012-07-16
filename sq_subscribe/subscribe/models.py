@@ -132,9 +132,13 @@ def load_template(content = 'plain', type = 'content'):
 
         loaders = []
         for loader_name in settings.TEMPLATE_LOADERS:
-            loader = find_template_loader(loader_name)
-            if loader is not None:
-                loaders.append(loader)
+            try:
+                loader = find_template_loader(loader_name)
+            except :
+                pass
+            else:
+                if loader is not None:
+                    loaders.append(loader)
         template_source_loaders = tuple(loaders)
         for loader in template_source_loaders:
             try:
