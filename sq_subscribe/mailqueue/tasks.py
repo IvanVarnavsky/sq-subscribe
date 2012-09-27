@@ -18,7 +18,8 @@ def send_concrete_mailqueue(queue_ids):
                 except Exception:
                     raise('MESSAGE %s CAN NOT SENDED'%email.id)
         finally:
-            connection.close()
+            if connection:
+                connection.close()
 
 
 #Асинхронная отправка сообщения, подойдет для уведомлений.
