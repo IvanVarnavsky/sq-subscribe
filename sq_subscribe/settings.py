@@ -2,14 +2,14 @@
 
 def inject_module_apps():
     from django.conf import settings
-    APPS = [
+    APPS = (
         'sq_core',
         'sq_user',
         'sq_widgets',
         'sq_tasks',
         'sq_subscribe.subscribe',
         'sq_subscribe.mailqueue',
-    ]
+    )
 
     settings.INSTALLED_APPS = APPS + settings.INSTALLED_APPS
     return APPS
