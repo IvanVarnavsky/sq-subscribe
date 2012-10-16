@@ -10,8 +10,6 @@ def inject_module_apps():
         'sq_subscribe.subscribe',
         'sq_subscribe.mailqueue',
     )
-
-    settings.INSTALLED_APPS = APPS + settings.INSTALLED_APPS
     return APPS
 
 EMAIL_TEMPLATE_DIR =  'email'
