@@ -26,7 +26,7 @@ class MailQueue(models.Model):
     content_type = models.CharField(max_length=100, blank=True, choices=CONTENT_TYPE)
 
     def __unicode__(self):
-        return u'Mail message ' + str(self.subject)
+        return u'Mail message %s' % self.subject
 
     class Meta:
         db_table = 'mailqueue'
