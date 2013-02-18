@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from celery.task import task
 from django.core import mail
 from sq_subscribe.mailqueue.models import MailQueue, create_mailqueue
@@ -11,12 +12,12 @@ def send_concrete_mailqueue(queue_ids):
             connection = mail.get_connection(fail_silently=True)
             connection.open()
             for email_id in queue_ids:
-                email = MailQueue.objects.get(pk=email_id)
-                msg = email.send_email(connection)
                 try:
+                    email = MailQueue.objects.get(pk=email_id)
+                    msg = email.send_email(connection)
                     msg.send()
                 except Exception:
-                    raise('MESSAGE %s CAN NOT SENDED'%email.id)
+                    print 'MESSAGE %s CAN NOT SENDED'%email.id
         finally:
             if connection:
                 connection.close()
