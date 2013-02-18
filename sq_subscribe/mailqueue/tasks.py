@@ -13,7 +13,9 @@ def send_concrete_mailqueue(queue_ids):
             connection.open()
             for email_id in queue_ids:
                 try:
+                    print "SENDING"
                     email = MailQueue.objects.get(pk=email_id)
+                    print "EMAIL_ID: %s"%email.id
                     msg = email.send_email(connection)
                     msg.send()
                 except Exception:
