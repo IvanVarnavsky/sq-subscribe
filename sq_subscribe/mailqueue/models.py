@@ -53,10 +53,19 @@ class MailQueue(models.Model):
             text_content = strip_tags(html_content)
         try:
             if self.content_type == 'html':
-                msg = EmailMultiAlternatives(self.subject,text_content,from_email=self.send_from,to=[self.send_to],connection=connecion)
+                send_to_list = self.send_to.split(",")
+                if len(send_to_list)>0
+                    msg = EmailMultiAlternatives(self.subject,text_content,from_email=self.send_from,to=[send_to_list[0]],connection=connecion, bcc=send_to_list[1:], headers={'Cc': ','.join(send_to_list[1:])})
+                else:
+                    msg = EmailMultiAlternatives(self.subject,text_content,from_email=self.send_from,to=[send_to_list[0]],connection=connecion)
                 msg.attach_alternative(html_content,"text/html")
-            else :
-                msg = EmailMessage(self.subject,text_content,from_email=self.send_from,to=[self.send_to],connection=connecion)
+            else:
+                send_to_list = self.send_to.split(",")
+                
+                if len(send_to_list)>0
+                    msg = EmailMessage(self.subject,text_content,from_email=self.send_from,to=[send_to_list[0]],connection=connecion, bcc=send_to_list[1:], headers={'Cc': ','.join(send_to_list[1:])})
+                else:
+                    msg = EmailMessage(self.subject,text_content,from_email=self.send_from,to=[send_to_list[0]],connection=connecion)
         except Exception:
             raise Exception('Email message %s can not created.'%self.id)
         self.delete()
