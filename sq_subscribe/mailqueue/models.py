@@ -54,7 +54,7 @@ class MailQueue(models.Model):
         try:
             if self.content_type == 'html':
                 send_to_list = self.send_to.split(",")
-                if len(send_to_list)>0
+                if len(send_to_list)>0:
                     msg = EmailMultiAlternatives(self.subject,text_content,from_email=self.send_from,to=[send_to_list[0]],connection=connecion, bcc=send_to_list[1:], headers={'Cc': ','.join(send_to_list[1:])})
                 else:
                     msg = EmailMultiAlternatives(self.subject,text_content,from_email=self.send_from,to=[send_to_list[0]],connection=connecion)
@@ -62,7 +62,7 @@ class MailQueue(models.Model):
             else:
                 send_to_list = self.send_to.split(",")
                 
-                if len(send_to_list)>0
+                if len(send_to_list)>0:
                     msg = EmailMessage(self.subject,text_content,from_email=self.send_from,to=[send_to_list[0]],connection=connecion, bcc=send_to_list[1:], headers={'Cc': ','.join(send_to_list[1:])})
                 else:
                     msg = EmailMessage(self.subject,text_content,from_email=self.send_from,to=[send_to_list[0]],connection=connecion)
