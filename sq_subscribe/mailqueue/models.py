@@ -24,6 +24,7 @@ class MailQueue(models.Model):
     template = models.TextField(blank=True)
     created_date = models.DateTimeField(default=datetime.now())
     content_type = models.CharField(max_length=100, blank=True, choices=CONTENT_TYPE)
+    att_file = models.FileField(upload_to="meeting.ics", null=True)
 
     def __unicode__(self):
         return u'Mail message %s' % self.subject
@@ -66,12 +67,14 @@ class MailQueue(models.Model):
                     msg = EmailMessage(self.subject,text_content,from_email=self.send_from,to=[send_to_list[0]],connection=connecion, bcc=send_to_list[1:], headers={'Cc': ','.join(send_to_list[1:])})
                 else:
                     msg = EmailMessage(self.subject,text_content,from_email=self.send_from,to=[send_to_list[0]],connection=connecion)
+            if (self.att_file_name is not None) and (self.att_file) and (self.att_file_type)
+                msg.attach(self.att_file_name, self.att_file, self.att_file_type)
         except Exception:
             raise Exception('Email message %s can not created.'%self.id)
         self.delete()
         return msg
 
-def create_mailqueue(subject, template, send_to, content_type, message=None, send_from=None):
+def create_mailqueue(subject, template, send_to, content_type, message=None, send_from=None, att_file_name=None, att_file=None, att_file_type=None):
     if not message: message = {}
     from django.conf import settings
     if send_from is None:
@@ -79,13 +82,13 @@ def create_mailqueue(subject, template, send_to, content_type, message=None, sen
     site = Site.objects.get_current()
     message.update({"site":{'sitename': site.name,'domain':site.domain}})
     msg = {"data":message}
-    mail = MailQueue.objects.create(message=json.dumps(msg),send_to=send_to,subject=subject,template=template,send_from=send_from,content_type=content_type)
+    mail = MailQueue.objects.create(message=json.dumps(msg),send_to=send_to,subject=subject,template=template,send_from=send_from,content_type=content_type,att_file_name=att_file_name,att_file=att_file,att_file_type=att_file_type)
     mail.save()
     return mail
 
 
-def send_email(subject,template,send_to,content_type,message=None,send_from=None):
+def send_email(subject,template,send_to,content_type,message=None,send_from=None,att_file_name=None,att_file=None,att_file_type=None):
     from sq_subscribe.mailqueue.tasks import send_concrete_mailqueue
-    mail = create_mailqueue(subject,template,send_to,content_type,message,send_from)
+    mail = create_mailqueue(subject,template,send_to,content_type,message,send_from,att_file_name,att_file,att_file_type)
     #TODO нужно придумать, как сделать проверку - отправлять ли письмо по таску или мгновенно.
     send_concrete_mailqueue.delay([mail.id])
