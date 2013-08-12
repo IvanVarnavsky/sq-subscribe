@@ -74,7 +74,7 @@ class MailQueue(models.Model):
         self.delete()
         return msg
 
-def create_mailqueue(subject, template, send_to, content_type, message=None, send_from=None, att_file_name=None, att_file=None, att_file_type=None):
+def create_mailqueue(subject, template, send_to, content_type, message=None, send_from=None):
     if not message: message = {}
     from django.conf import settings
     if send_from is None:
@@ -82,13 +82,13 @@ def create_mailqueue(subject, template, send_to, content_type, message=None, sen
     site = Site.objects.get_current()
     message.update({"site":{'sitename': site.name,'domain':site.domain}})
     msg = {"data":message}
-    mail = MailQueue.objects.create(message=json.dumps(msg),send_to=send_to,subject=subject,template=template,send_from=send_from,content_type=content_type,att_file_name=att_file_name,att_file=att_file,att_file_type=att_file_type)
+    mail = MailQueue.objects.create(message=json.dumps(msg),send_to=send_to,subject=subject,template=template,send_from=send_from,content_type=content_type)
     mail.save()
     return mail
 
 
 def send_email(subject,template,send_to,content_type,message=None,send_from=None,att_file_name=None,att_file=None,att_file_type=None):
     from sq_subscribe.mailqueue.tasks import send_concrete_mailqueue
-    mail = create_mailqueue(subject,template,send_to,content_type,message,send_from,att_file_name,att_file,att_file_type)
+    mail = create_mailqueue(subject,template,send_to,content_type,message,send_from)
     #TODO нужно придумать, как сделать проверку - отправлять ли письмо по таску или мгновенно.
     send_concrete_mailqueue.delay([mail.id])
