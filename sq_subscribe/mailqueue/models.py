@@ -9,6 +9,7 @@ from django.core.mail.message import EmailMultiAlternatives, EmailMessage
 from django.db import models
 from django.template.loader import render_to_string, get_template_from_string
 from django.utils.html import strip_tags
+from django.conf import settings
 
 
 CONTENT_TYPE = [
@@ -39,7 +40,6 @@ class MailQueue(models.Model):
     def send_email(self,connecion):
         print"-----<3>-----"
         vars = json.loads(self.message)
-        from django.conf import settings
         template_directory =  getattr(settings, "EMAIL_TEMPLATE_DIR", 'email')
         if self.template.endswith('.html') or self.template.endswith('.txt'):
             try:
@@ -79,7 +79,6 @@ class MailQueue(models.Model):
 def create_mailqueue(subject, template, send_to, content_type, message=None, send_from=None):
     print"-----<2>-----"
     if not message: message = {}
-    from django.conf import settings
     if send_from is None:
         send_from = settings.DEFAULT_FROM_EMAIL
     site = Site.objects.get_current()
