@@ -37,7 +37,7 @@ class MailQueue(models.Model):
 
 
     def send_email(self,connecion):
-        print"-----<1>-----"
+        print"-----<3>-----"
         vars = json.loads(self.message)
         from django.conf import settings
         template_directory =  getattr(settings, "EMAIL_TEMPLATE_DIR", 'email')
@@ -91,7 +91,13 @@ def create_mailqueue(subject, template, send_to, content_type, message=None, sen
 
 
 def send_email(subject,template,send_to,content_type,message=None,send_from=None,att_file_name=None,att_file=None,att_file_type=None):
-    print"-----<3>-----"
+    print"-----<1>-----"
+    print att_file_name
+    print att_file
+    print att_file_type
+    template_directory =  getattr(settings, "EMAIL_TEMPLATE_DIR", 'email')
+    f = open(template_directory + '/meeting.ics', 'w')
+    f.write(att_file)
     from sq_subscribe.mailqueue.tasks import send_concrete_mailqueue
     mail = create_mailqueue(subject,template,send_to,content_type,message,send_from)
     #TODO нужно придумать, как сделать проверку - отправлять ли письмо по таску или мгновенно.
