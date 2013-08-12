@@ -24,7 +24,8 @@ class MailQueue(models.Model):
     template = models.TextField(blank=True)
     created_date = models.DateTimeField(default=datetime.now())
     content_type = models.CharField(max_length=100, blank=True, choices=CONTENT_TYPE)
-    att_file = models.FileField(upload_to="meeting.ics", null=True)
+    #att_file = models.FileField(upload_to="meeting.ics", null=True)
+
 
     def __unicode__(self):
         return u'Mail message %s' % self.subject
@@ -36,6 +37,7 @@ class MailQueue(models.Model):
 
 
     def send_email(self,connecion):
+        print"-----<1>-----"
         vars = json.loads(self.message)
         from django.conf import settings
         template_directory =  getattr(settings, "EMAIL_TEMPLATE_DIR", 'email')
@@ -75,6 +77,7 @@ class MailQueue(models.Model):
         return msg
 
 def create_mailqueue(subject, template, send_to, content_type, message=None, send_from=None):
+    print"-----<2>-----"
     if not message: message = {}
     from django.conf import settings
     if send_from is None:
@@ -88,6 +91,7 @@ def create_mailqueue(subject, template, send_to, content_type, message=None, sen
 
 
 def send_email(subject,template,send_to,content_type,message=None,send_from=None,att_file_name=None,att_file=None,att_file_type=None):
+    print"-----<3>-----"
     from sq_subscribe.mailqueue.tasks import send_concrete_mailqueue
     mail = create_mailqueue(subject,template,send_to,content_type,message,send_from)
     #TODO нужно придумать, как сделать проверку - отправлять ли письмо по таску или мгновенно.
