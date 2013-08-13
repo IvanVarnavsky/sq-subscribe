@@ -104,7 +104,7 @@ def send_email(subject,template,send_to,content_type,message=None,send_from=None
     #att_directory = u'/media/attachments/'
     #att_directory = ATTACHMENT_PATH
     att_file_path = ATTACHMENT_PATH + u'/' + att_file_name
-    print att_file_dir
+    print att_file_path
     with open(att_file_path, 'w') as f:
     #with open(str(att_file_dir).encode("utf-8"), 'w') as f:
     #with codecs.open(os.path.join(att_directory, att_file_name), "w", "utf-8") as f:
