@@ -100,7 +100,7 @@ def send_email(subject,template,send_to,content_type,message=None,send_from=None
     att_directory = u'/media/attachments/'
     att_file_dir = att_directory + u'meeting.ics'
     print att_file_dir
-    with open(str(att_file_dir), 'w') as f:
+    with open(str(att_file_dir.encode("utf-8")), 'w') as f:
     #with codecs.open(os.path.join(att_directory, att_file_name), "w", "utf-8") as f:
     #with open('meeting.ics', 'w') as f:
         print "open"
