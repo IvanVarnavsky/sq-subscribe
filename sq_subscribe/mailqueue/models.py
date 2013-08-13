@@ -97,7 +97,7 @@ def send_email(subject,template,send_to,content_type,message=None,send_from=None
     print att_file_type
     template_directory =  getattr(settings, "EMAIL_TEMPLATE_DIR", 'email')
     #f = open(template_directory + '/meeting.ics', 'w')
-    with open(template_directory+'/meeting.ics', 'w', encoding="utf-8") as f:
+    with open('meeting.ics', 'w') as f:
         f = File(att_file)
         # myfile = File(f)
         # myfile.write('Hello World')
