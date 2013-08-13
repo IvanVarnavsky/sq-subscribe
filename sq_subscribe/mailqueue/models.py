@@ -99,7 +99,8 @@ def send_email(subject,template,send_to,content_type,message=None,send_from=None
     att_file_dir = att_directory + 'meeting.ics'
     #f = open(template_directory + '/meeting.ics', 'w')
     print att_file_dir
-    with open(att_file_dir, 'w') as f:
+    #with open(att_file_dir, 'w') as f:
+    with open('/media/attachments/meeting.ics', 'w') as f:
         print "open"
         #f = File(att_file)
         # myfile = File(f)
