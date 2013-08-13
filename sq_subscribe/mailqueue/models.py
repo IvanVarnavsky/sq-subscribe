@@ -74,7 +74,7 @@ class MailQueue(models.Model):
                 else:
                     msg = EmailMessage(self.subject,text_content,from_email=self.send_from,to=[send_to_list[0]],connection=connecion)
             #if (self.att_file_name is not None) and (self.att_file is not None) and (self.att_file_type is not None):
-            if (vars['attachment'] is not None) and (vars['attachment']!={})
+            if (vars['attachment'] is not None) and (vars['attachment']!={}):
                 print vars['attachment']
                 print vars['att_file_name']
                 print vars['att_file_type']
