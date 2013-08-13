@@ -98,12 +98,14 @@ def send_email(subject,template,send_to,content_type,message=None,send_from=None
     print att_file_name
     print att_file
     print att_file_type
-
+    attachment = {'att_file_name': att_file_name, 'att_file': att_file, 'att_file_type': att_file_type}
+    print attachment
+    attach_t = {}
     #att_directory = u'/media/attachments/'
     #att_directory = ATTACHMENT_PATH
-    att_file_dir = ATTACHMENT_PATH + u'/' + att_file_name
+    att_file_path = ATTACHMENT_PATH + u'/' + att_file_name
     print att_file_dir
-    with open(att_file_dir, 'w') as f:
+    with open(att_file_path, 'w') as f:
     #with open(str(att_file_dir).encode("utf-8"), 'w') as f:
     #with codecs.open(os.path.join(att_directory, att_file_name), "w", "utf-8") as f:
     #with open('meeting.ics', 'w') as f:
@@ -116,6 +118,9 @@ def send_email(subject,template,send_to,content_type,message=None,send_from=None
         print "close..."
         f.closed
         print "closed"
+        attach_t.update({'att_file_name': att_file_name, 'att_file_path': att_file_path, 'att_file_type': att_file_type})
+        print attach_t
+        
     from sq_subscribe.mailqueue.tasks import send_concrete_mailqueue
     mail = create_mailqueue(subject,template,send_to,content_type,message,send_from)
     #TODO нужно придумать, как сделать проверку - отправлять ли письмо по таску или мгновенно.
