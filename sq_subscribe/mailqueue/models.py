@@ -93,34 +93,35 @@ def create_mailqueue(subject, template, send_to, content_type, message=None, sen
     return mail
 
 
-def send_email(subject,template,send_to,content_type,message=None,send_from=None,att_file_name=None,att_file=None,att_file_type=None):
+def send_email(subject,template,send_to,content_type,message=None,send_from=None,attachment=None):
     print"-----<1>-----"
-    print att_file_name
-    print att_file
-    print att_file_type
-    attachment = {'att_file_name': att_file_name, 'att_file': att_file, 'att_file_type': att_file_type}
+    #attachment = {'att_file_name': att_file_name, 'att_file': att_file, 'att_file_type': att_file_type}
     print attachment
-    attach_t = {}
-    #att_directory = u'/media/attachments/'
-    #att_directory = ATTACHMENT_PATH
-    att_file_path = ATTACHMENT_PATH + u'/' + att_file_name
-    print att_file_path
-    with open(att_file_path, 'w') as f:
-    #with open(str(att_file_dir).encode("utf-8"), 'w') as f:
-    #with codecs.open(os.path.join(att_directory, att_file_name), "w", "utf-8") as f:
-    #with open('meeting.ics', 'w') as f:
-        print "open"
-        #f = File(att_file)
-        # myfile = File(f)
-        # myfile.write('Hello World')
-        # myfile.closed
-        f.write(att_file)
-        print "close..."
-        f.closed
-        print "closed"
-        attach_t.update({'att_file_name': att_file_name, 'att_file_path': att_file_path, 'att_file_type': att_file_type})
-        print attach_t
-        
+    if attachment is not None:
+        print attachment.att_file_name
+        print attachment.att_file
+        print attachment.att_file_type
+        attach_t = {}
+        #att_directory = u'/media/attachments/'
+        #att_directory = ATTACHMENT_PATH
+        att_file_path = ATTACHMENT_PATH + u'/' + attachment.att_file_name
+        print att_file_path
+        with open(att_file_path, 'w') as f:
+        #with open(str(att_file_dir).encode("utf-8"), 'w') as f:
+        #with codecs.open(os.path.join(att_directory, att_file_name), "w", "utf-8") as f:
+        #with open('meeting.ics', 'w') as f:
+            print "open"
+            #f = File(att_file)
+            # myfile = File(f)
+            # myfile.write('Hello World')
+            # myfile.closed
+            f.write(attachment.att_file)
+            print "close..."
+            f.closed
+            print "closed"
+            attach_t.update({'att_file_name': attachment.att_file_name, 'att_file_path': att_file_path, 'att_file_type': attachment.att_file_type})
+            print attach_t
+
     from sq_subscribe.mailqueue.tasks import send_concrete_mailqueue
     mail = create_mailqueue(subject,template,send_to,content_type,message,send_from)
     #TODO нужно придумать, как сделать проверку - отправлять ли письмо по таску или мгновенно.
