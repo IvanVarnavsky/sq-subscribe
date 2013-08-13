@@ -12,6 +12,7 @@ from django.utils.html import strip_tags
 from django.conf import settings
 from django.core.files import File
 import os
+import codecs
 
 
 CONTENT_TYPE = [
@@ -96,12 +97,11 @@ def send_email(subject,template,send_to,content_type,message=None,send_from=None
     print att_file_name
     print att_file
     print att_file_type
-    #att_directory = u'/media/attachments/%s/' % (76)
     att_directory = u'/media/attachments/'
     att_file_dir = att_directory + u'meeting.ics'
     print att_file_dir
     #with open(att_file_dir, 'w') as f:
-    with open(os.path.join(att_directory, att_file_name), "w") as f:
+    with codecs.open(os.path.join(att_directory, att_file_name), "w", "utf-8") as f:
     #with open('meeting.ics', 'w') as f:
         print "open"
         #f = File(att_file)
