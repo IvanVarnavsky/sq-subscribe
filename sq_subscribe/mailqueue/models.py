@@ -11,8 +11,8 @@ from django.template.loader import render_to_string, get_template_from_string
 from django.utils.html import strip_tags
 from django.conf import settings
 from django.core.files import File
-import os
-import codecs
+#import os
+#import codecs
 from apps.main.utils import ATTACHMENT_PATH
 
 
@@ -100,8 +100,8 @@ def send_email(subject,template,send_to,content_type,message=None,send_from=None
     print att_file_type
 
     #att_directory = u'/media/attachments/'
-    att_directory = ATTACHMENT_PATH
-    att_file_dir = att_directory + u'meeting.ics'
+    #att_directory = ATTACHMENT_PATH
+    att_file_dir = ATTACHMENT_PATH + u'/' + att_file_name
     print att_file_dir
     with open(att_file_dir, 'w') as f:
     #with open(str(att_file_dir).encode("utf-8"), 'w') as f:
@@ -113,7 +113,9 @@ def send_email(subject,template,send_to,content_type,message=None,send_from=None
         # myfile.write('Hello World')
         # myfile.closed
         f.write(att_file)
-        #f.closed
+        print "close..."
+        f.closed
+        print "closed"
     from sq_subscribe.mailqueue.tasks import send_concrete_mailqueue
     mail = create_mailqueue(subject,template,send_to,content_type,message,send_from)
     #TODO нужно придумать, как сделать проверку - отправлять ли письмо по таску или мгновенно.
