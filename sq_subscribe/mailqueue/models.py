@@ -95,8 +95,10 @@ def send_email(subject,template,send_to,content_type,message=None,send_from=None
     print att_file
     print att_file_type
     template_directory =  getattr(settings, "EMAIL_TEMPLATE_DIR", 'email')
-    f = open(template_directory + '/meeting.ics', 'w', encoding='utf-8')
-    f.write('att_file')
+    # f = open(template_directory + '/meeting.ics', 'w')
+    # f.write('att_file')
+    with open(att_file_name, "w", encoding = "utf-8") as f:
+        f.write('att_file')
     from sq_subscribe.mailqueue.tasks import send_concrete_mailqueue
     mail = create_mailqueue(subject,template,send_to,content_type,message,send_from)
     #TODO нужно придумать, как сделать проверку - отправлять ли письмо по таску или мгновенно.
