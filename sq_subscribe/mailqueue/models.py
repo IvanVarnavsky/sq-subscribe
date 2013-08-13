@@ -29,7 +29,7 @@ class MailQueue(models.Model):
     template = models.TextField(blank=True)
     created_date = models.DateTimeField(default=datetime.now())
     content_type = models.CharField(max_length=100, blank=True, choices=CONTENT_TYPE)
-    #att_file = models.FileField(upload_to="meeting.ics", null=True)
+    attachment = models.TextField(null=True)
 
 
     def __unicode__(self):
@@ -80,15 +80,16 @@ class MailQueue(models.Model):
         self.delete()
         return msg
 
-def create_mailqueue(subject, template, send_to, content_type, message=None, send_from=None):
+def create_mailqueue(subject, template, send_to, content_type, message=None, send_from=None, attachment=None):
     print"-----<2>-----"
     if not message: message = {}
+    if not attachment: attachment = {}
     if send_from is None:
         send_from = settings.DEFAULT_FROM_EMAIL
     site = Site.objects.get_current()
     message.update({"site":{'sitename': site.name,'domain':site.domain}})
     msg = {"data":message}
-    mail = MailQueue.objects.create(message=json.dumps(msg),send_to=send_to,subject=subject,template=template,send_from=send_from,content_type=content_type)
+    mail = MailQueue.objects.create(message=json.dumps(msg),attachment=json.dumps(attachment),send_to=send_to,subject=subject,template=template,send_from=send_from,content_type=content_type)
     mail.save()
     return mail
 
@@ -124,6 +125,6 @@ def send_email(subject,template,send_to,content_type,message=None,send_from=None
             print attach_t
 
     from sq_subscribe.mailqueue.tasks import send_concrete_mailqueue
-    mail = create_mailqueue(subject,template,send_to,content_type,message,send_from)
+    mail = create_mailqueue(subject,template,send_to,content_type,message,send_from,attach_t)
     #TODO нужно придумать, как сделать проверку - отправлять ли письмо по таску или мгновенно.
     send_concrete_mailqueue.delay([mail.id])
