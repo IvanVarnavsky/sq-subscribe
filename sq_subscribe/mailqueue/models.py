@@ -73,8 +73,12 @@ class MailQueue(models.Model):
                     msg = EmailMessage(self.subject,text_content,from_email=self.send_from,to=[send_to_list[0]],connection=connecion, bcc=send_to_list[1:], headers={'Cc': ','.join(send_to_list[1:])})
                 else:
                     msg = EmailMessage(self.subject,text_content,from_email=self.send_from,to=[send_to_list[0]],connection=connecion)
-            if (self.att_file_name is not None) and (self.att_file is not None) and (self.att_file_type is not None):
-                msg.attach(self.att_file_name, self.att_file, self.att_file_type)
+            #if (self.att_file_name is not None) and (self.att_file is not None) and (self.att_file_type is not None):
+            if (vars['attachment'] is not None) and (vars['attachment']!={})
+                print vars['attachment']
+                print vars['att_file_name']
+                print vars['att_file_type']
+                msg.attach(vars['att_file_name'], vars['att_file'], vars['att_file_type'])
         except Exception:
             raise Exception('Email message %s can not created.'%self.id)
         self.delete()
@@ -87,8 +91,8 @@ def create_mailqueue(subject, template, send_to, content_type, message=None, sen
     if send_from is None:
         send_from = settings.DEFAULT_FROM_EMAIL
     site = Site.objects.get_current()
-    message.update({"site":{'sitename': site.name,'domain':site.domain}})
-    msg = {"data":message, "attachment":attachment}
+    message.update({"site":{'sitename': site.name,'domain':site.domain},"attachment":attachment})
+    msg = {"data":message}
     mail = MailQueue.objects.create(message=json.dumps(msg),send_to=send_to,subject=subject,template=template,send_from=send_from,content_type=content_type)
     mail.save()
     return mail
