@@ -74,12 +74,12 @@ class MailQueue(models.Model):
                 else:
                     msg = EmailMessage(self.subject,text_content,from_email=self.send_from,to=[send_to_list[0]],connection=connecion)
             #if (self.att_file_name is not None) and (self.att_file is not None) and (self.att_file_type is not None):
-            if (vars['attachment'] is not None) and (vars['attachment']!={}):
-                print vars['attachment']
-                print vars['att_file_name']
-                print vars['att_file_type']
-                print vars['att_file_path']
-                msg.attach(vars['att_file_name'], vars['att_file_path'], vars['att_file_type'])
+            # if (vars['attachment'] is not None) and (vars['attachment']!={}):
+            #     print vars['attachment']
+            #     print vars['att_file_name']
+            #     print vars['att_file_type']
+            #     print vars['att_file_path']
+            #     msg.attach(vars['att_file_name'], vars['att_file_path'], vars['att_file_type'])
         except Exception:
             raise Exception('Email message %s can not created.'%self.id)
         self.delete()
