@@ -95,15 +95,18 @@ def send_email(subject,template,send_to,content_type,message=None,send_from=None
     print att_file_name
     print att_file
     print att_file_type
-    template_directory =  getattr(settings, "EMAIL_TEMPLATE_DIR", 'email')
+    att_directory = u'/media/attachments/%s/' % (76)
+    att_file_dir = att_directory + 'meeting.ics'
     #f = open(template_directory + '/meeting.ics', 'w')
-    with open('meeting.ics', 'w') as f:
-        f = File(att_file)
+    print att_file_dir
+    with open(att_file_dir, 'w') as f:
+        print "open"
+        #f = File(att_file)
         # myfile = File(f)
         # myfile.write('Hello World')
         # myfile.closed
-        f.closed
-        #f.write('att_file')
+        #f.closed
+        f.write(att_file)
     from sq_subscribe.mailqueue.tasks import send_concrete_mailqueue
     mail = create_mailqueue(subject,template,send_to,content_type,message,send_from)
     #TODO нужно придумать, как сделать проверку - отправлять ли письмо по таску или мгновенно.
