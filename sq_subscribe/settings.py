@@ -17,6 +17,3 @@ EMAIL_TEMPLATE_DIR =  'email'
 SUBSCRIBED_MODELS =  ()
 ADMIN_SUBSCRIBE_TEMPLATE_DIR = EMAIL_TEMPLATE_DIR
 
-# путь до папки media, в общем случае она пуста в начале
-MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
-MEDIA_URL = '/media/'  # URL для медии в шаблонах
