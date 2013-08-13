@@ -29,7 +29,7 @@ class MailQueue(models.Model):
     template = models.TextField(blank=True)
     created_date = models.DateTimeField(default=datetime.now())
     content_type = models.CharField(max_length=100, blank=True, choices=CONTENT_TYPE)
-    attachment = models.TextField(null=True)
+    #attachment = models.TextField(null=True)
 
 
     def __unicode__(self):
@@ -88,8 +88,8 @@ def create_mailqueue(subject, template, send_to, content_type, message=None, sen
         send_from = settings.DEFAULT_FROM_EMAIL
     site = Site.objects.get_current()
     message.update({"site":{'sitename': site.name,'domain':site.domain}})
-    msg = {"data":message}
-    mail = MailQueue.objects.create(message=json.dumps(msg),attachment=json.dumps(attachment),send_to=send_to,subject=subject,template=template,send_from=send_from,content_type=content_type)
+    msg = {"data":message, "attachment":attachment}
+    mail = MailQueue.objects.create(message=json.dumps(msg),send_to=send_to,subject=subject,template=template,send_from=send_from,content_type=content_type)
     mail.save()
     return mail
 
