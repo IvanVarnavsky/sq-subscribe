@@ -78,7 +78,8 @@ class MailQueue(models.Model):
                 print vars['attachment']
                 print vars['att_file_name']
                 print vars['att_file_type']
-                msg.attach(vars['att_file_name'], vars['att_file'], vars['att_file_type'])
+                print vars['att_file_path']
+                msg.attach(vars['att_file_name'], vars['att_file_path'], vars['att_file_type'])
         except Exception:
             raise Exception('Email message %s can not created.'%self.id)
         self.delete()
