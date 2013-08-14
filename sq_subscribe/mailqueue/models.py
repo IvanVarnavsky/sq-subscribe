@@ -80,11 +80,11 @@ class MailQueue(models.Model):
                 print vars['data']['attachment']['att_file_path']
                 with open(vars['data']['attachment']['att_file_path'], 'r') as f:
                     print "open"
-                    f.read()
-                    #attfile = File(f)
-                    msg.attach(vars['data']['attachment']['att_file_name'], f, vars['data']['attachment']['att_file_type'])
+                    attfile = File(f)
+                    attfile.read()
+                    msg.attach(vars['data']['attachment']['att_file_name'], attfile, vars['data']['attachment']['att_file_type'])
                     print "close..."
-                    #attfile.closed
+                    attfile.closed
                     f.closed
                     print "closed"
         except Exception:
