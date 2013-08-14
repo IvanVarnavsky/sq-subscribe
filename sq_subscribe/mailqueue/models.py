@@ -13,6 +13,7 @@ from django.conf import settings
 from django.core.files import File
 from apps.main.utils import ATTACHMENT_PATH
 from django.core.files.storage import FileSystemStorage, Storage
+import os
 
 
 CONTENT_TYPE = [
@@ -111,7 +112,8 @@ class MailQueue(models.Model):
                 #FileSystemStorage.delete(path)
                 #Storage.delete(f)
                 #Storage.delete(path)
-                delete(path)
+                #delete(path)
+                os.remove(path)
                 print "delete"
         except Exception:
             raise Exception('Email message %s can not created.'%self.id)
