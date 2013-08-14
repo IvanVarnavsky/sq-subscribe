@@ -14,6 +14,7 @@ from django.core.files import File
 #import os
 #import codecs
 from apps.main.utils import ATTACHMENT_PATH
+from django.core.files.base import ContentFile
 
 
 CONTENT_TYPE = [
@@ -84,7 +85,9 @@ class MailQueue(models.Model):
                     print "open"
                     # attfile = File(f)
                     # attfile.read()
-                    attfile = f.read()
+                    # attfile = f.read()
+                    attfile = File(f.read())
+                    #attfile = ContentFile(f.read())
                     msg.attach(vars['data']['attachment']['att_file_name'], attfile, vars['data']['attachment']['att_file_type'])
                     print "close..."
                     attfile.closed
