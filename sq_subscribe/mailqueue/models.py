@@ -86,16 +86,16 @@ class MailQueue(models.Model):
                     print "open"
                     # for line in f.readlines():
                     #     print line
-                    
+
                     # attfile = File(f)
                     # attfile.read()
 
-                    attfile.write(f)
-                    # attfile = f.read()
+                    #attfile.write(f)
+                    attfile = f.read()
                     #attfile = File(f.read())
                     #attfile = ContentFile(f.read())
                     #attfile = ContentFile(f)
-                    msg.attach(vars['data']['attachment']['att_file_name'], attfile, vars['data']['attachment']['att_file_type'])
+                    msg.attach(attfile, vars['data']['attachment']['att_file_name'],  vars['data']['attachment']['att_file_type'])
                     print "close..."
                     attfile.closed
                     f.closed
