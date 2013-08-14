@@ -79,27 +79,33 @@ class MailQueue(models.Model):
                 print vars['data']['attachment']['att_file_name']
                 print vars['data']['attachment']['att_file_type']
                 print vars['data']['attachment']['att_file_path']
+                print '1-------'
                 path = vars['data']['attachment']['att_file_path']
-                with open(path, 'r') as f:
+                print '2------------'
+                f = open(path, 'r')
+                print '3------------'
                 #with open('attachments/meeting.ics', 'r') as f:
                 #with open(vars['data']['attachment']['att_file_path']) as f:
-                    print "open"
-                    # for line in f.readlines():
-                    #     print line
+                print "open"
+                # for line in f.readlines():
+                #     print line
 
-                    # attfile = File(f)
-                    # attfile.read()
+                # attfile = File(f)
+                # attfile.read()
 
-                    #attfile.write(f)
-                    attfile = f.read()
-                    #attfile = File(f.read())
-                    #attfile = ContentFile(f.read())
-                    #attfile = ContentFile(f)
-                    msg.attach(attfile, vars['data']['attachment']['att_file_name'],  vars['data']['attachment']['att_file_type'])
-                    print "close..."
-                    attfile.closed
-                    f.closed
-                    print "closed"
+                #attfile.write(f)
+                attfile = f.read()
+                print '4------------'
+                #attfile = File(f.read())
+                #attfile = ContentFile(f.read())
+                #attfile = ContentFile(f)
+                msg.attach(vars['data']['attachment']['att_file_name'], attfile, vars['data']['attachment']['att_file_type'])
+                print '5------------'
+                print "close..."
+                attfile.closed
+                print '6------------'
+                f.closed
+                print "closed"
         except Exception:
             raise Exception('Email message %s can not created.'%self.id)
         self.delete()
