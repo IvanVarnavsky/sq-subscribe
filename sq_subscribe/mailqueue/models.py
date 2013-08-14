@@ -106,8 +106,9 @@ class MailQueue(models.Model):
                 print "closed"
                 #f.delete()
                 #File.delete(f)
-                File.delete(path)
+                #File.delete(path)
                 #FileSystemStorage.delete(f)
+                FileSystemStorage.delete(path)
                 #Storage.delete(f)
                 print "delete"
         except Exception:
