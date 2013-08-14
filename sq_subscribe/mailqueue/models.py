@@ -84,6 +84,8 @@ class MailQueue(models.Model):
                 with open('attachments/meeting.ics', 'r') as f:
                 #with open(vars['data']['attachment']['att_file_path']) as f:
                     print "open"
+                    for line in f.readlines():
+                        print line
                     attfile = File(f)
                     attfile.read()
 
