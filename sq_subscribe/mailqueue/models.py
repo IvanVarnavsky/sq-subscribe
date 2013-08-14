@@ -87,9 +87,9 @@ class MailQueue(models.Model):
                     attfile = f.read()
                     msg.attach(vars['data']['attachment']['att_file_name'], attfile, vars['data']['attachment']['att_file_type'])
                     print "close..."
-                attfile.closed
-                f.closed
-                print "closed"
+                    attfile.closed
+                    f.closed
+                    print "closed"
         except Exception:
             raise Exception('Email message %s can not created.'%self.id)
         self.delete()
