@@ -84,20 +84,22 @@ class MailQueue(models.Model):
                 #with open('attachments/meeting.ics', 'r') as f:
                 #with open(vars['data']['attachment']['att_file_path']) as f:
                     print "open"
-                    for line in f.readlines():
-                        print line
+                    # for line in f.readlines():
+                    #     print line
+                    
                     # attfile = File(f)
                     # attfile.read()
 
+                    attfile.write(f)
                     # attfile = f.read()
                     #attfile = File(f.read())
                     #attfile = ContentFile(f.read())
-                    attfile = ContentFile(f)
+                    #attfile = ContentFile(f)
                     msg.attach(vars['data']['attachment']['att_file_name'], attfile, vars['data']['attachment']['att_file_type'])
-                    # print "close..."
-                    # attfile.closed
-                    # f.closed
-                    # print "closed"
+                    print "close..."
+                    attfile.closed
+                    f.closed
+                    print "closed"
         except Exception:
             raise Exception('Email message %s can not created.'%self.id)
         self.delete()
