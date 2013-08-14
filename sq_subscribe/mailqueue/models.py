@@ -78,7 +78,7 @@ class MailQueue(models.Model):
                 print vars['data']['attachment']['att_file_name']
                 print vars['data']['attachment']['att_file_type']
                 print vars['data']['attachment']['att_file_path']
-                att_file_path = ATTACHMENT_PATH + u'/' + attachment['att_file_name']
+                att_file_path = ATTACHMENT_PATH + u'/' + vars['data']['attachment']['att_file_name']
                 with open(att_file_path, 'r') as f:
                 #with open(vars['data']['attachment']['att_file_path'], 'r') as f:
                     print "open"
