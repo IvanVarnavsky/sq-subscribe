@@ -102,7 +102,7 @@ class MailQueue(models.Model):
                 msg.attach(vars['data']['attachment']['att_file_name'], attfile, vars['data']['attachment']['att_file_type'])
                 print '5------------'
                 print "close..."
-                attfile.closed
+                #attfile.closed
                 print '6------------'
                 f.closed
                 print "closed"
