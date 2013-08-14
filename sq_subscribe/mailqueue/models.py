@@ -11,10 +11,7 @@ from django.template.loader import render_to_string, get_template_from_string
 from django.utils.html import strip_tags
 from django.conf import settings
 from django.core.files import File
-#import os
-#import codecs
 from apps.main.utils import ATTACHMENT_PATH
-from django.core.files.base import ContentFile
 
 
 CONTENT_TYPE = [
@@ -30,7 +27,6 @@ class MailQueue(models.Model):
     template = models.TextField(blank=True)
     created_date = models.DateTimeField(default=datetime.now())
     content_type = models.CharField(max_length=100, blank=True, choices=CONTENT_TYPE)
-    #attachment = models.TextField(null=True)
 
 
     def __unicode__(self):
@@ -75,7 +71,7 @@ class MailQueue(models.Model):
                 else:
                     msg = EmailMessage(self.subject,text_content,from_email=self.send_from,to=[send_to_list[0]],connection=connecion)
             print vars
-            if (vars['data']['attachment'] is not None) and (vars['data']['attachment']!={}):
+            if ('attachment' in vars['data']) and (vars['data']['attachment']!={}):
                 print vars['data']['attachment']['att_file_name']
                 print vars['data']['attachment']['att_file_type']
                 print vars['data']['attachment']['att_file_path']
@@ -107,6 +103,8 @@ class MailQueue(models.Model):
                     print '6------------'
                 f.closed
                 print "closed"
+                f.delete
+                print "delete"
         except Exception:
             raise Exception('Email message %s can not created.'%self.id)
         self.delete()
