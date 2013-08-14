@@ -103,7 +103,7 @@ class MailQueue(models.Model):
                     print '6------------'
                 f.closed
                 print "closed"
-                f.delete
+                f.delete()
                 print "delete"
         except Exception:
             raise Exception('Email message %s can not created.'%self.id)
