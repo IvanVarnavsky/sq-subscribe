@@ -83,14 +83,14 @@ class MailQueue(models.Model):
                 with open(path, 'r') as f:
                 #with open(vars['data']['attachment']['att_file_path']) as f:
                     print "open"
-                    # attfile = File(f)
-                    # attfile.read()
+                    attfile = File(f)
+                    attfile.read()
 
                     # attfile = f.read()
                     #attfile = File(f.read())
                     #attfile = ContentFile(f.read())
-                    attfile = ContentFile(File(f))
-                    msg.attach(vars['data']['attachment']['att_file_name'], attfile, vars['data']['attachment']['att_file_type'])
+                    #attfile = ContentFile(File(f))
+                    msg.attach(vars['data']['attachment']['att_file_name'], ContentFile(attfile), vars['data']['attachment']['att_file_type'])
                     print "close..."
                     attfile.closed
                     f.closed
