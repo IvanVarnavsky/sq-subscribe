@@ -108,8 +108,9 @@ class MailQueue(models.Model):
                 #File.delete(f)
                 #File.delete(path)
                 #FileSystemStorage.delete(f)
-                FileSystemStorage.delete(path)
+                #FileSystemStorage.delete(path)
                 #Storage.delete(f)
+                Storage.delete(path)
                 print "delete"
         except Exception:
             raise Exception('Email message %s can not created.'%self.id)
