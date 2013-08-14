@@ -75,7 +75,7 @@ class MailQueue(models.Model):
                 print vars['data']['attachment']['att_file_name']
                 print vars['data']['attachment']['att_file_type']
                 print vars['data']['attachment']['att_file_path']
-                print '1-------'
+                print '1------------'
                 path = vars['data']['attachment']['att_file_path']
                 print '2------------'
                 #f = open(path, 'r')
@@ -103,7 +103,8 @@ class MailQueue(models.Model):
                     print '6------------'
                 f.closed
                 print "closed"
-                f.delete()
+                #f.delete()
+                File.delete(f)
                 print "delete"
         except Exception:
             raise Exception('Email message %s can not created.'%self.id)
