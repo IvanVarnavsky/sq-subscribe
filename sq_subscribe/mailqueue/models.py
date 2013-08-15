@@ -94,8 +94,8 @@ def create_mailqueue(subject, template, send_to, content_type, message=None, sen
 
 
 def send_email(subject,template,send_to,content_type,message=None,send_from=None,attachment=None):
+    attach_t = {}
     if attachment is not None:
-        attach_t = {}
         att_file_path = ATTACHMENT_PATH + u'/' + attachment['att_file_name']
         with open(att_file_path, 'w') as f:
             f.write(attachment['att_file'])
